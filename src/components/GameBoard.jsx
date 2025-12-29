@@ -328,8 +328,8 @@ const GameBoard = ({ userData }) => {
                     </h2>
                     <p className="text-blue-800 mb-4">
                         {gameResult === 'win'
-                            ? 'Congratulations! You matched all 3 unique images in a row!'
-                            : 'Try again! You need to select 3 unique matching images in the same row.'}
+                            ? 'Congratulations! You won the match!'
+                            : 'Try again! You loose the match'}
                     </p>
 
                     <button
@@ -395,7 +395,7 @@ const GameBoard = ({ userData }) => {
                     {/* Game Area */}
                     <div className="p-4">
                         {/* Game Board - 3x3 Grid */}
-                        <div className="grid grid-cols-3 gap-2 mb-6">
+                        <div className="grid grid-cols-3 gap-2 mb-4">
                             {boardCards.map((card, index) => (
                                 <button
                                     key={`card-${index}`}
@@ -448,19 +448,7 @@ const GameBoard = ({ userData }) => {
                                         </svg>
                                     </div>
 
-                                    <p className="text-sm mt-1">
-                                        {gameStarted && currentCallerImage
-                                            ? `Find: ${currentCallerImage.name}`
-                                            : 'Match the generated images'}
-                                        <br />
-                                        <span className="text-yellow-300">
-                                            Selected: {userSelections.length}/3 cards
-                                        </span>
-                                        <br />
-                                        <span className="text-yellow-200 text-xs">
-                                            All cards must be unique and in the same row
-                                        </span>
-                                    </p>
+
                                 </div>
 
                                 {/* Generated Image Box */}
