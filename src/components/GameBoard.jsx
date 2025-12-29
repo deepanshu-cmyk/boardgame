@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import InstructionsModal from './InstructionsModal'
+import LooseModal from './LooseModal'
 import WinModal from './WinModal'
 import ReadySetGo from './ReadySetGo'
 
@@ -229,19 +230,12 @@ const GameBoard = ({ userData }) => {
             return
         }
 
-        // Match generated images in order
-        // imagesToCheck should have all 3 images
-        if (imagesToCheck.length !== 3) {
-            console.log("GameBoard: Not enough images - have", imagesToCheck.length, "expected 3")
-            endGame('loss', 'Not enough images generated')
-            return
-        }
-
+        // Check if selections match the generated images (regardless of order)
         const generatedIds = imagesToCheck.map(g => g.id)
         const selectedIds = ids
 
-        // Check if selections match generated images in order
-        const isMatch = selectedIds.every((id, i) => id === generatedIds[i])
+        // Check if all generated images are selected
+        const isMatch = generatedIds.every(id => selectedIds.includes(id)) && selectedIds.every(id => generatedIds.includes(id))
 
         console.log("GameBoard: Generated IDs:", generatedIds)
         console.log("GameBoard: Selected IDs:", selectedIds)
@@ -275,7 +269,7 @@ const GameBoard = ({ userData }) => {
             const firstImage = generateNextCallerImage(resetCards, [])
             if (firstImage) {
                 setCurrentCallerImage(firstImage) // Show first image
-                setTimer(10)
+                setTimer(3)
             } else {
                 console.log("GameBoard: No cards available to start game")
                 return resetCards
@@ -319,31 +313,31 @@ const GameBoard = ({ userData }) => {
     }
 
     // Render the game board based on game status
-    const renderGameStatus = () => {
-        if (gameOver) {
-            return (
-                <div className="text-center mt-6">
-                    <h2 className="text-2xl font-bold text-blue-900 mb-2">
-                        {gameResult === 'win' ? '🎉 You Won! 🎉' : '😢 Game Over 😢'}
-                    </h2>
-                    <p className="text-blue-800 mb-4">
-                        {gameResult === 'win'
-                            ? 'Congratulations! You won the match!'
-                            : 'Try again! You loose the match'}
-                    </p>
+    // const renderGameStatus = () => {
+    //     if (gameOver) {
+    //         return (
+    //             <div className="text-center mt-6">
+    //                 <h2 className="text-2xl font-bold text-blue-900 mb-2">
+    //                     {gameResult === 'win' ? '🎉 You Won! 🎉' : '😢 Game Over 😢'}
+    //                 </h2>
+    //                 <p className="text-blue-800 mb-4">
+    //                     {gameResult === 'win'
+    //                         ? 'Congratulations! You won the match!'
+    //                         : 'Try again! You loose the match'}
+    //                 </p>
 
-                    <button
-                        onClick={resetGame}
-                        className="bg-yellow-500 hover:bg-yellow-600 text-blue-900 font-bold py-2 px-6 rounded-full text-base shadow-lg transition-colors"
-                    >
-                        Play Again
-                    </button>
-                </div>
-            )
-        }
+    //                 <button
+    //                     onClick={resetGame}
+    //                     className="bg-yellow-500 hover:bg-yellow-600 text-blue-900 font-bold py-2 px-6 rounded-full text-base shadow-lg transition-colors"
+    //                 >
+    //                     Play Again
+    //                 </button>
+    //             </div>
+    //         )
+    //     }
 
-        return null
-    }
+    //     return null
+    // }
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
@@ -471,7 +465,7 @@ const GameBoard = ({ userData }) => {
                         </div>
 
                         {/* Game Controls and Status */}
-                        {renderGameStatus()}
+                        {/* {renderGameStatus()} */}
 
                         {/* Game Stats */}
                         {/* <div className="mt-4 bg-blue-900 bg-opacity-80 text-white p-3 rounded-lg">
@@ -514,6 +508,12 @@ const GameBoard = ({ userData }) => {
                 onPlayAgain={resetGame}
                 userData={userData}
                 images={{ coronaLogoIntro }}
+            />
+
+            {/* Lose Modal */}
+            <LooseModal
+                isOpen={gameOver && gameResult === 'loss'}
+                onClose={() => setGameOver(false)}
             />
         </div>
     )
