@@ -216,19 +216,15 @@ const GameBoard = ({ userData }) => {
         console.log("GameBoard: Selections:", selections.map(s => s.name))
         console.log("GameBoard: Generated images:", imagesToCheck.map(g => g.name))
 
-        // Unique cards
-        const ids = selections.map(c => c.id)
-        if (new Set(ids).size !== 3) {
-            endGame('loss', 'Cards must be unique')
-            return
-        }
-
         // Same row
         const row = selections[0].row
         if (!selections.every(c => c.row === row)) {
             endGame('loss', 'Cards must be in same row')
             return
         }
+
+        // Get selected ids
+        const ids = selections.map(c => c.id)
 
         // Check if selections match the generated images (regardless of order)
         const generatedIds = imagesToCheck.map(g => g.id)
@@ -244,7 +240,18 @@ const GameBoard = ({ userData }) => {
         if (isMatch) {
             endGame('win', 'Perfect match!')
         } else {
-            endGame('loss', 'Images do not match')
+            // Check alternative win condition: 2 images same and 1 unique
+            const freq = {}
+            selectedIds.forEach(id => freq[id] = (freq[id] || 0) + 1)
+            const frequencies = Object.values(freq)
+            const hasTwoSame = frequencies.includes(2)
+            const hasOneUnique = frequencies.length === 2 // 2 unique ids, one repeated
+
+            if (hasTwoSame && hasOneUnique) {
+                endGame('win', 'Good match with 2 same and 1 unique!')
+            } else {
+                endGame('loss', 'Images do not match')
+            }
         }
     }
 
