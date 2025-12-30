@@ -279,14 +279,6 @@ const AgeGate = ({ onNext }) => {
                         {/* Date of Birth Input Section */}
                         <div className="mb-4 sm:mb-10">
                             <div className="flex flex-col items-center mb-6">
-                                {/* MM DD YYYY Label */}
-                                {/* <div className="text-center mb-4">
-                                    <label className={`${getTextColorClass()} text-lg font-bold flex items-center justify-center transition-colors duration-200`}>
-                                        <Calendar className="w-5 h-5 mr-2" />
-                                        MM DD YYYY
-                                    </label>
-                                </div> */}
-
                                 {/* Input Fields Container */}
                                 <div className="flex justify-center space-x-2 mb-2 px-8">
                                     {/* Month Input */}
@@ -295,7 +287,16 @@ const AgeGate = ({ onNext }) => {
                                             ref={monthInputRef}
                                             value={dob.month}
                                             onChange={(e) => handleDateChange('month', e.target.value)}
-                                            onKeyDown={(e) => handleKeyDown('month', e)}
+                                            onKeyDown={(e) => {
+                                                handleKeyDown('month', e);
+                                                // Add Enter key handler
+                                                if (e.key === 'Enter') {
+                                                    e.preventDefault();
+                                                    if (!isButtonDisabled) {
+                                                        checkAge();
+                                                    }
+                                                }
+                                            }}
                                             className={`w-10 sm:w-20 bg-transparent border-b-3 ${getBorderColorClass('month')} text-center text-md sm:text-3xl font-bold ${getTextColorClass()} placeholder-[#0c2042]/50 focus:outline-none  transition-colors duration-200`}
                                             type="text"
                                             id="dob_month"
@@ -317,7 +318,16 @@ const AgeGate = ({ onNext }) => {
                                             ref={dayInputRef}
                                             value={dob.day}
                                             onChange={(e) => handleDateChange('day', e.target.value)}
-                                            onKeyDown={(e) => handleKeyDown('day', e)}
+                                            onKeyDown={(e) => {
+                                                handleKeyDown('day', e);
+                                                // Add Enter key handler
+                                                if (e.key === 'Enter') {
+                                                    e.preventDefault();
+                                                    if (!isButtonDisabled) {
+                                                        checkAge();
+                                                    }
+                                                }
+                                            }}
                                             className={`w-10 sm:w-20 bg-transparent border-b-3 ${getBorderColorClass('day')} text-center text-md sm:text-3xl font-bold ${getTextColorClass()} placeholder-[#0c2042]/50 focus:outline-none  transition-colors duration-200`}
                                             type="text"
                                             id="dob_day"
@@ -338,7 +348,16 @@ const AgeGate = ({ onNext }) => {
                                             ref={yearInputRef}
                                             value={dob.year}
                                             onChange={(e) => handleDateChange('year', e.target.value)}
-                                            onKeyDown={(e) => handleKeyDown('year', e)}
+                                            onKeyDown={(e) => {
+                                                handleKeyDown('year', e);
+                                                // Add Enter key handler
+                                                if (e.key === 'Enter') {
+                                                    e.preventDefault();
+                                                    if (!isButtonDisabled) {
+                                                        checkAge();
+                                                    }
+                                                }
+                                            }}
                                             className={`w-10 sm:w-24 bg-transparent border-b-3 ${getBorderColorClass('year')} text-center text-md sm:text-3xl font-bold ${getTextColorClass()} placeholder-[#0c2042]/50 focus:outline-none  transition-colors duration-200`}
                                             type="text"
                                             id="dob_year"

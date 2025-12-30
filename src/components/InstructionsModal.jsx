@@ -43,10 +43,10 @@ const InstructionsModal = ({ isOpen, onClose }) => {
                     {/* Game Rules - Centered */}
                     <div className="p-2 text-[12px] font-semibold text-center  flex flex-col justify-center"
                         style={{ flexGrow: .5 }}>
-                        <p className="mb-2">"THE CALLER" box at the bottom of the screen will display a card.</p>
-                        <p className="mb-2">If "THE CALLER" card matches any of the nine cards above, select the card to lock it in.</p>
-                        <p className="mb-2">You have 3 seconds to select the matching card before a new card appears in "THE CALLER" box.</p>
-                        <p className="mb-4">Get 3 in a row to be entered into the sweepstakes!</p>
+                        <p className="mb-2">"Flip the tiles to reveal the elements of Tullamore D.E.W.’s Triple Blend.</p>
+                        <p className="mb-2">Find one of each — Malt Whiskey, Grain Whiskey, and Pot Still Whiskey</p>
+                        <p className="mb-2">Complete the blend to unlock a special offer.</p>
+
                     </div>
 
                     {/* Button - Centered */}

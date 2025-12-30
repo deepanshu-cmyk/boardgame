@@ -6,15 +6,15 @@ import ReadySetGo from './ReadySetGo'
 
 // Import background images
 import stuccoBg576 from '../assets/stucco_bg-992.png'
-import coronaLogoIntro from '../assets/corona-logo.png'
+import coronaLogoIntro from '../assets/TULLAMORE_DEW_BRAND_GUIDELINES_LOGO_VERTICAL_COPPER_GREEN.png'
 
 // Import logo
 import coronaLogo from '../assets/C_logo-360.png'
 
 // Import card images
-import P1 from '../assets/P1-240.png'
-import P2 from '../assets/P2-240.png'
-import P3 from '../assets/P3-240.png'
+import P1 from '../assets/TripleCaskCopy.png'
+import P2 from '../assets/TripleDistilledCopy.png'
+import P3 from '../assets/TripleBlendedCopy.png'
 import P4 from '../assets/P4-240.png'
 import P5 from '../assets/P5-240.png'
 import P6 from '../assets/P6-240.png'
@@ -194,9 +194,9 @@ const GameBoard = ({ userData }) => {
             return
         }
 
-        // If neither win nor lose condition met, maybe continue or default to win
-        // For now, let's default to win if not the lose condition
-        endGame('win', 'Good selections!')
+        // If neither win nor lose condition met, maybe continue or default to loss
+        // For now, let's default to loss if all card are same condition
+        endGame('loss', 'All Cards have Unique!')
     }
 
     const endGame = (result, reason) => {
@@ -204,7 +204,7 @@ const GameBoard = ({ userData }) => {
         console.log("User selections:", userSelections)
         console.log("Generated images:", generatedImages)
 
-        // Add 3 second delay before showing modal
+        // Add 2 second delay before showing modal
         setTimeout(() => {
             setGameResult(result)
             setGameOver(true)
@@ -213,7 +213,7 @@ const GameBoard = ({ userData }) => {
             if (result === 'win') {
                 setGameWon(true)
             }
-        }, 3000)
+        }, 2000)
     }
 
     const startGame = () => {
@@ -361,7 +361,7 @@ const GameBoard = ({ userData }) => {
                                     >
                                         <div className="flip-card-inner aspect-square">
                                             {/* Front of card - Corona Logo */}
-                                            <div className="flip-card-front bg-gradient-to-br from-blue-900 to-yellow-400">
+                                            <div className="flip-card-front bg-transparent">
                                                 <div className="w-full h-full flex items-center justify-center p-2">
                                                     <img
                                                         src={coronaLogoIntro}
@@ -373,12 +373,12 @@ const GameBoard = ({ userData }) => {
 
                                             {/* Back of card - Actual Card Image */}
                                             <div className="flip-card-back ">
-                                                <div className="w-full h-full flex items-center justify-center p-2 relative">
-                                                    <img
+                                                <div className="w-full h-full flex items-center justify-center p-2 relative bg-black">
+                                                    {/* <img
                                                         src={coronaLogoIntro}
                                                         alt="Corona Logo Background"
                                                         className="w-full h-full object-contain opacity-50 absolute inset-0"
-                                                    />
+                                                    /> */}
                                                     <img
                                                         src={card.image}
                                                         alt={card.name}
