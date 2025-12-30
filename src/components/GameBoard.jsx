@@ -15,10 +15,7 @@ import coronaLogo from '../assets/C_logo-360.png'
 import P1 from '../assets/TripleCaskCopy.png'
 import P2 from '../assets/TripleDistilledCopy.png'
 import P3 from '../assets/TripleBlendedCopy.png'
-import P4 from '../assets/P4-240.png'
-import P5 from '../assets/P5-240.png'
-import P6 from '../assets/P6-240.png'
-import P7 from '../assets/P7-240.png'
+
 
 // Import modal images
 import matchgameLogo from '../assets/matchgame-logo.png'
@@ -39,9 +36,9 @@ const GameBoard = ({ userData }) => {
 
     // Card types with imported images - only P1, P2, P3
     const cardTypes = [
-        { id: 'p1', name: 'Corona Extra', image: P1 },
-        { id: 'p2', name: 'Corona Familiar', image: P2 },
-        { id: 'p3', name: 'Corona Premier', image: P3 }
+        { id: 'p1', name: 'TripleCaskCopy', image: P1 },
+        { id: 'p2', name: 'TripleDistilledCopy', image: P2 },
+        { id: 'p3', name: 'TripleBlendedCopy', image: P3 }
     ]
 
     // Generate next image from remaining board cards (excluding already selected ones)
@@ -70,22 +67,19 @@ const GameBoard = ({ userData }) => {
     const initializeBoard = () => {
         console.log("GameBoard: Initializing board...")
 
-        // Create board with 3 each of P1, P2, P3 randomly placed
+        // Generate the target sequence: P1, P2, P3 (for display purposes only)
+        const targetCards = [
+            cardTypes.find(card => card.id === 'p1'),
+            cardTypes.find(card => card.id === 'p2'),
+            cardTypes.find(card => card.id === 'p3')
+        ]
+        setGeneratedImages(targetCards)
+
+        // Create board with completely random cards from all available types
         const cards = []
-        const cardCounts = { p1: 0, p2: 0, p3: 0 }
-        const maxPerType = 3
 
         for (let i = 0; i < 9; i++) {
-            let randomCard
-            let attempts = 0
-            do {
-                randomCard = cardTypes[Math.floor(Math.random() * cardTypes.length)]
-                attempts++
-                // Prevent infinite loop, but allow up to maxPerType of each
-            } while (cardCounts[randomCard.id] >= maxPerType && attempts < 50)
-
-            cardCounts[randomCard.id]++
-
+            const randomCard = cardTypes[Math.floor(Math.random() * cardTypes.length)]
             cards.push({
                 ...randomCard,
                 position: i,
@@ -93,7 +87,8 @@ const GameBoard = ({ userData }) => {
                 isMatched: false,
                 row: Math.floor(i / 3),
                 col: i % 3,
-                isFlipped: false
+                isFlipped: false,
+                isTarget: false
             })
         }
 
@@ -103,7 +98,6 @@ const GameBoard = ({ userData }) => {
         // Reset everything
         setUserSelections([])
         setCurrentCallerImage(null)
-        setGeneratedImages([])
         setGameOver(false)
         setGameResult('')
         setGameWon(false)
@@ -194,9 +188,14 @@ const GameBoard = ({ userData }) => {
             return
         }
 
-        // If neither win nor lose condition met, maybe continue or default to loss
-        // For now, let's default to loss if all card are same condition
-        endGame('loss', 'All Cards have Unique!')
+        // Lose condition: all cards are the same
+        if (counts.length === 1) {
+            endGame('loss', 'All cards are the same - you lose!')
+            return
+        }
+
+        // If neither win nor lose condition met, default to win for unique combinations
+        endGame('win', 'Good selections!')
     }
 
     const endGame = (result, reason) => {
@@ -306,7 +305,7 @@ const GameBoard = ({ userData }) => {
                 <div className="relative z-10 w-full max-w-xl">
                     {/* Main Card Container */}
                     <div
-                        className="relative bg-transparent rounded-lg overflow-hidden border border-[#2a5d5d] shadow-2xl backdrop-blur-sm"
+                        className="relative bg-transparent rounded-lg overflow-hidden border border-[#2a5d5d] shadow-2xl backdrop-blur-sm "
                         style={{
                             backgroundImage: `url(${stuccoBg576})`,
                             backgroundSize: 'cover',
@@ -350,6 +349,27 @@ const GameBoard = ({ userData }) => {
 
                         {/* Game Area */}
                         <div className="p-4">
+                            {/* Target Sequence Display */}
+                            {generatedImages.length > 0 && (
+                                <div className="mb-4 p-3 bg-white bg-opacity-90 rounded-lg">
+                                    <h3 className="text-center text-lg font-bold text-blue-900 mb-2">Find These Cards in Order:</h3>
+                                    <div className="flex justify-center gap-2">
+                                        {generatedImages.map((card, index) => (
+                                            <div key={`target-${index}`} className="flex flex-col items-center">
+                                                <div className="w-16 h-16 rounded-lg overflow-hidden border-2 border-blue-500 shadow-md">
+                                                    <img
+                                                        src={card.image}
+                                                        alt={card.name}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                </div>
+                                                <span className="text-xs text-blue-900 mt-1 font-semibold">{index + 1}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Game Board - 3x3 Grid */}
                             <div className="grid grid-cols-3 gap-2 mb-4">
                                 {boardCards.map((card) => (
