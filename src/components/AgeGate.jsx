@@ -271,7 +271,7 @@ const AgeGate = ({ onNext }) => {
 
                         {/* Age Verification Message */}
                         <div className="text-center mb-8">
-                            <p className="text-[#0c2042] text-[10px] sm:text-[16px]  font-bold mb-4">
+                            <p className="text-[#0c2042] text-[12px] sm:text-[16px]  font-bold mb-4">
                                 YOU MUST BE OF LEGAL DRINKING AGE TO ENTER THIS SITE.
                             </p>
                         </div>

@@ -259,7 +259,7 @@ const DataCapture = ({ onNext }) => {
                                 <img
                                     src={top}
                                     alt="Jurana Beer Logo"
-                                    className="w-48 h-auto"
+                                    className="w-48 sm:w-80 h-auto"
                                 />
                             </div>
                         </div>

@@ -42,10 +42,10 @@ const WinModal = ({ isOpen, onClose }) => {
                     {/* Game Rules - Centered */}
                     <div className="p-2 text-[12px] font-semibold text-center  flex flex-col justify-center"
                         style={{ flexGrow: .5 }}>
-                        <p className=" text-2xl">You Get A Match.</p>
-                        <p className=" text-2xl">Play Again</p>
-                        <p className="mb-2 text-2xl">Tomorrow</p>
-                        <p className="mb-2">You've been entered into the sweepstakes! Play every day to increase your chance of winning.</p>
+                        <p className=" text-2xl">You’ve brought together</p>
+                        <p className=" text-2xl">Malt, Grain, and Pot Still whiskey —</p>
+                        {/* <p className="mb-2 text-2xl">Tomorrow</p> */}
+                        <p className="mb-2"> the signature that makes Tullamore D.E.W. unmistakably smooth.</p>
 
                     </div>
 
