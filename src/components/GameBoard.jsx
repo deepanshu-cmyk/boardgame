@@ -21,13 +21,12 @@ import P3 from '../assets/TripleBlendedCopy.png'
 import matchgameLogo from '../assets/matchgame-logo.png'
 import howToPlay from '../assets/how-to-play.svg'
 
-const GameBoard = ({ userData }) => {
+const GameBoard = ({ userData, onGameComplete }) => {
     const [gameStarted, setGameStarted] = useState(false)
     const [showInstructions, setShowInstructions] = useState(true)
     const [gameWon, setGameWon] = useState(false)
     const [currentCallerImage, setCurrentCallerImage] = useState(null)
     const [generatedImages, setGeneratedImages] = useState([])
-    const [userSelections, setUserSelections] = useState([])
     const [showReadySetGo, setShowReadySetGo] = useState(false)
     const [boardCards, setBoardCards] = useState([])
     const [gameOver, setGameOver] = useState(false)
@@ -75,10 +74,26 @@ const GameBoard = ({ userData }) => {
         ]
         setGeneratedImages(targetCards)
 
-        // Create board with completely random cards from all available types
+        // Create board with at least one of each card type, then random for the rest
         const cards = []
 
-        for (let i = 0; i < 9; i++) {
+        // First, add one of each type
+        const shuffledTypes = [...cardTypes].sort(() => Math.random() - 0.5)
+        for (let i = 0; i < 3; i++) {
+            cards.push({
+                ...shuffledTypes[i],
+                position: i,
+                isSelected: false,
+                isMatched: false,
+                row: Math.floor(i / 3),
+                col: i % 3,
+                isFlipped: false,
+                isTarget: false
+            })
+        }
+
+        // Fill the remaining 6 positions with random cards
+        for (let i = 3; i < 9; i++) {
             const randomCard = cardTypes[Math.floor(Math.random() * cardTypes.length)]
             cards.push({
                 ...randomCard,
@@ -96,7 +111,6 @@ const GameBoard = ({ userData }) => {
         setFlippedCards([])
 
         // Reset everything
-        setUserSelections([])
         setCurrentCallerImage(null)
         setGameOver(false)
         setGameResult('')
@@ -109,98 +123,50 @@ const GameBoard = ({ userData }) => {
 
     // Handle card flip
     const handleCardFlip = (position) => {
-        if (!gameStarted || gameOver || userSelections.length >= 3) return
+        if (!gameStarted || gameOver) return
 
         // Check if card is already flipped
         if (flippedCards.includes(position)) {
             return
         }
 
+        const card = boardCards.find(c => c.position === position)
+
         // Flip the card
-        setFlippedCards(prev => [...prev, position])
+        setFlippedCards(prev => {
+            const newFlipped = [...prev, position]
+            const currentFlippedTypes = newFlipped.map(pos => {
+                if (pos === position) return card.id
+                return boardCards.find(c => c.position === pos).id
+            })
+            setTimeout(() => {
+                const uniqueTypes = new Set(currentFlippedTypes)
+                console.log("Checking win, uniqueTypes.size:", uniqueTypes.size, "flipped:", newFlipped.length)
+                if (uniqueTypes.size === 3) {
+                    console.log("Calling endGame win")
+                    endGame('win', 'You found all three card types!')
+                } else if (newFlipped.length === 9) {
+                    endGame('loss', 'You flipped all cards but didn\'t find all types!')
+                }
+            }, 600)
+            return newFlipped
+        })
 
         // Update board card flip state
-        setBoardCards(prevCards => prevCards.map(card =>
-            card.position === position ? { ...card, isFlipped: true } : card
+        setBoardCards(prevCards => prevCards.map(c =>
+            c.position === position ? { ...c, isFlipped: true } : c
         ))
     }
 
     const handleCardClick = (card) => {
         if (!gameStarted || gameOver) return
 
-        // First, flip the card if it's not already flipped
-        if (!flippedCards.includes(card.position)) {
-            handleCardFlip(card.position)
-        }
-
-        // Check if card is already selected
-        if (userSelections.some(sel => sel.position === card.position)) {
-            console.log("GameBoard: Card already selected")
-            return
-        }
-
-        console.log("GameBoard: Card selected:", card.name)
-
-        // Mark card as selected
-        const selection = { ...card, isSelected: true }
-        const updatedSelections = [...userSelections, selection]
-
-        // Update board cards
-        setBoardCards(prevCards => prevCards.map(c =>
-            c.position === card.position
-                ? { ...c, isSelected: true }
-                : c
-        ))
-        setUserSelections(updatedSelections)
-
-        // If we have 3 selections, check win/lose conditions
-        if (updatedSelections.length === 3) {
-            checkWinLoseConditions(updatedSelections)
-            return
-        }
-    }
-
-    const checkWinLoseConditions = (selections) => {
-        console.log("GameBoard: Checking win/lose conditions")
-        console.log("GameBoard: Selections:", selections.map(s => s.name))
-
-        // Get selected card IDs in order
-        const selectedIds = selections.map(c => c.id)
-        console.log("Selected IDs in order:", selectedIds)
-
-        // Win condition: P1, P2, P3 in sequence
-        if (selectedIds[0] === 'p1' && selectedIds[1] === 'p2' && selectedIds[2] === 'p3') {
-            endGame('win', 'Perfect sequence: P1, P2, P3!')
-            return
-        }
-
-        // Lose condition: 2 cards same, 1 different
-        const idCounts = {}
-        selectedIds.forEach(id => {
-            idCounts[id] = (idCounts[id] || 0) + 1
-        })
-        const counts = Object.values(idCounts)
-        const hasTwoSame = counts.includes(2)
-        const hasOneDifferent = counts.length === 2
-
-        if (hasTwoSame && hasOneDifferent) {
-            endGame('loss', 'Two cards same, one different - you lose!')
-            return
-        }
-
-        // Lose condition: all cards are the same
-        if (counts.length === 1) {
-            endGame('loss', 'All cards are the same - you lose!')
-            return
-        }
-
-        // If neither win nor lose condition met, default to win for unique combinations
-        endGame('win', 'Good selections!')
+        // Flip the card
+        handleCardFlip(card.position)
     }
 
     const endGame = (result, reason) => {
         console.log("Game ended:", result, "- Reason:", reason)
-        console.log("User selections:", userSelections)
         console.log("Generated images:", generatedImages)
 
         // Add 2 second delay before showing modal
@@ -210,16 +176,16 @@ const GameBoard = ({ userData }) => {
             setGameStarted(false)
 
             if (result === 'win') {
+                console.log("Setting gameWon to true")
                 setGameWon(true)
             }
-        }, 2000)
+        }, 1000)
     }
 
     const startGame = () => {
         console.log("GameBoard: Starting game")
 
-        // Reset selections and flipped cards
-        setUserSelections([])
+        // Reset flipped cards
         setFlippedCards([])
         setGeneratedImages([])
 
@@ -352,7 +318,7 @@ const GameBoard = ({ userData }) => {
                             {/* Target Sequence Display */}
                             {generatedImages.length > 0 && (
                                 <div className="mb-4 p-3 bg-white bg-opacity-90 rounded-lg">
-                                    <h3 className="text-center text-lg font-bold text-blue-900 mb-2">Find These Cards in Order:</h3>
+                                    <h3 className="text-center text-lg font-bold text-blue-900 mb-2">Find All Three Card Types:</h3>
                                     <div className="flex justify-center gap-2">
                                         {generatedImages.map((card, index) => (
                                             <div key={`target-${index}`} className="flex flex-col items-center">
@@ -377,7 +343,7 @@ const GameBoard = ({ userData }) => {
                                         key={`card-${card.position}`}
                                         onClick={() => handleCardClick(card)}
                                         className={`relative rounded-lg overflow-hidden shadow-lg transition-all duration-300 ${flippedCards.includes(card.position) ? 'flipped' : ''} flip-card`}
-                                        disabled={!gameStarted || card.isSelected || gameOver || userSelections.length >= 3}
+                                        disabled={!gameStarted || gameOver || flippedCards.includes(card.position)}
                                     >
                                         <div className="flip-card-inner aspect-square">
                                             {/* Front of card - Corona Logo */}
@@ -411,11 +377,11 @@ const GameBoard = ({ userData }) => {
                                 ))}
                             </div>
 
-                            {/* Selection Counter */}
+                            {/* Flip Counter */}
                             <div className="mt-4 text-center text-[#0f2951] font-semibold">
-                                <p className="text-sm">Flipped: {userSelections.length}/3</p>
-                                {userSelections.length === 3 && !gameOver && (
-                                    <p className="text-[#0f2951] text-sm mt-1">Checking your selections...</p>
+                                <p className="text-sm">Flipped: {flippedCards.length}/9</p>
+                                {flippedCards.length > 0 && !gameOver && (
+                                    <p className="text-[#0f2951] text-sm mt-1">Find all three card types!</p>
                                 )}
                             </div>
                         </div>
@@ -440,12 +406,18 @@ const GameBoard = ({ userData }) => {
                     onPlayAgain={resetGame}
                     userData={userData}
                     images={{ coronaLogoIntro }}
+                    onUnlockRebate={() => {
+                        if (onGameComplete) {
+                            onGameComplete() // This triggers navigation in App.jsx
+                        }
+                    }}
                 />
 
                 {/* Lose Modal */}
                 <LooseModal
                     isOpen={gameOver && gameResult === 'loss'}
                     onClose={() => setGameOver(false)}
+
                 />
             </div>
         </>

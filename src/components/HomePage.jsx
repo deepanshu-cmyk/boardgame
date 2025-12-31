@@ -81,7 +81,7 @@ const HomePage = ({ onNext }) => {
                                 className="relative group"
                             >
                                 <div className="absolute -inset-1 bg-gradient-to-r from-[#ffcc00] via-[#ff9900] to-[#ffcc00] rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
-                                <div className="relative bg-gradient-to-r from-[#ffcc00] to-[#ff9900] text-black font-bold text-s px-12 py-1 rounded-lg uppercase tracking-wider hover:scale-105 transition-transform shadow-lg border-2 border-[#0f2951]">
+                                <div className="relative bg-gradient-to-r from-[#ffcc00] to-[#ff9900] text-black font-bold text-[12px] sm:text-lg px-12 py-1 rounded-lg uppercase tracking-wider hover:scale-105 transition-transform shadow-lg border-2 border-[#0f2951]">
                                     PLAY TO ENTER
                                 </div>
                             </button>

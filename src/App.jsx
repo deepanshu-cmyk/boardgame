@@ -3,10 +3,12 @@ import HomePage from './components/HomePage'
 import AgeGate from './components/AgeGate'
 import DataCapture from './components/DataCapture'
 import GameBoard from './components/GameBoard'
+import UnlockRebate from './components/UnlockRebate'
 
 function App() {
   const [currentStep, setCurrentStep] = useState('home')
   const [userData, setUserData] = useState(null)
+  const [gameCompleted, setGameCompleted] = useState(false)
 
   const steps = {
     'home': <HomePage onNext={() => setCurrentStep('age')} />,
@@ -17,7 +19,14 @@ function App() {
         setCurrentStep('game')
       }}
     />,
-    'game': <GameBoard userData={userData} />
+    'game': <GameBoard
+      userData={userData}
+      onGameComplete={() => {
+        setGameCompleted(true)
+        setCurrentStep('unlock')
+      }}
+    />,
+    'unlock': <UnlockRebate userData={userData} />
   }
 
   return (
