@@ -324,9 +324,9 @@ const UnlockRebate = ({ onNext }) => {
                                 </div>
 
                                 {/* Loading Animation */}
-                                <div className="mt-6">
+                                {/* <div className="mt-6">
                                     <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-[#0c2042] border-r-transparent"></div>
-                                </div>
+                                </div> */}
                             </div>
 
                             {/* Footer Text - Legal */}
@@ -572,7 +572,7 @@ const UnlockRebate = ({ onNext }) => {
                                             {isSubmitting ? (
                                                 <>
                                                     <div className="inline-block h-4 w-4  mr-2"></div>
-                                                    PROCESSING...
+                                                    SUBMITTING...
                                                 </>
                                             ) : (
                                                 'SUBMIT'

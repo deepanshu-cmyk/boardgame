@@ -78,22 +78,22 @@ const GameBoard = ({ userData, onGameComplete }) => {
         const cards = []
 
         // First, add one of each type
-        const shuffledTypes = [...cardTypes].sort(() => Math.random() - 0.5)
-        for (let i = 0; i < 3; i++) {
-            cards.push({
-                ...shuffledTypes[i],
-                position: i,
-                isSelected: false,
-                isMatched: false,
-                row: Math.floor(i / 3),
-                col: i % 3,
-                isFlipped: false,
-                isTarget: false
-            })
-        }
+        // const shuffledTypes = [...cardTypes].sort(() => Math.random() - 0.5)
+        // for (let i = 0; i < 3; i++) {
+        //     cards.push({
+        //         ...shuffledTypes[i],
+        //         position: i,
+        //         isSelected: false,
+        //         isMatched: false,
+        //         row: Math.floor(i / 3),
+        //         col: i % 3,
+        //         isFlipped: false,
+        //         isTarget: false
+        //     })
+        // }
 
         // Fill the remaining 6 positions with random cards
-        for (let i = 3; i < 9; i++) {
+        for (let i = 0; i < 9; i++) {
             const randomCard = cardTypes[Math.floor(Math.random() * cardTypes.length)]
             cards.push({
                 ...randomCard,
