@@ -6,7 +6,7 @@ import coronaLogo from '../assets/corona-logo.png'
 import video from '../assets/TULLAMORE_DEW_PAID_SOCIAL_REELS_DB_PILSNER_FINAL_MASTER.mp4'
 
 // Add onUnlockRebate to the props
-const WinModal = ({ isOpen, onClose, onUnlockRebate }) => {
+const WinModal = ({ isOpen, onUnlockRebate }) => {
     console.log('WinModal isOpen:', isOpen)
     if (!isOpen) return null
 
@@ -61,13 +61,15 @@ const WinModal = ({ isOpen, onClose, onUnlockRebate }) => {
                         <button
                             onClick={() => {
                                 // Call onUnlockRebate to navigate to UnlockRebate component
-                                if (onUnlockRebate) {
-                                    onUnlockRebate()
-                                } else {
-                                    console.error('onUnlockRebate function not provided!')
-                                    // Fallback - you can remove this once it's working
-                                    window.open("https://www.coronausa.com/pages/corona-premier", "_blank")
-                                }
+                                // if (onUnlockRebate) {
+                                //     onUnlockRebate()
+                                // } else {
+                                //     console.error('onUnlockRebate function not provided!')
+                                //     // Fallback - you can remove this once it's working
+                                //     window.open("https://www.coronausa.com/pages/corona-premier", "_blank")
+                                // }
+
+                                window.open("https://your-rebate-page.com", "_blank")
                             }}
                             className="bg-[#0f2951] hover:bg-[#1a3a6b] text-white font-semibold sm:font-bold py-1 sm:py-3 px-6 rounded-full shadow-lg w-auto sm:min-w-[220px] transition-colors text-lg"
                         >

@@ -55,7 +55,7 @@ const InstructionsModal = ({ isOpen, onClose }) => {
                             onClick={onClose}
                             className="bg-yellow-500 hover:bg-yellow-600 text-[#0f2951] font-bold py-3 px-4 rounded-full shadow-lg w-auto min-w-[200px]"
                         >
-                            PLAY MATCH GAME
+                            Start Blending
                         </button>
                     </div>
                 </div>
